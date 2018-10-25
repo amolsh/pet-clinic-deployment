@@ -1,0 +1,24 @@
+---
+- hosts: pet
+  become: yes
+  vars_files:
+    - var.yml
+  tasks:
+    - name: Stop a container
+      docker_container:
+          name: pet-clinic
+          state: stopped
+      ignore_errors: true
+
+    - name: remove a container
+      docker_container:
+          name: pet-clinic
+          state: absent
+      ignore_errors: true
+
+    - name: docker pulll
+      docker_container: name="pet-clinic" image=amolsh/petclinic:"{{ app_version }}"
+      ports:
+        - "8080:8080"
+      state: present
+      
